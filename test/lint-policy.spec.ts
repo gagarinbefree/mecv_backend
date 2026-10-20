@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 describe('mandatory code policy', defineLintPolicyTests);
 
 /**
- * Registers negative cases that must be rejected by the real ESLint config.
+ * Регистрирует негативные проверки обязательных правил ESLint.
  */
 function defineLintPolicyTests(): void {
   it('rejects explicit any', rejectsAny);
@@ -19,11 +19,11 @@ function defineLintPolicyTests(): void {
 }
 
 /**
- * Checks a deliberate policy violation using a real typed project file.
- * @param source - Deliberately invalid TypeScript supplied only to the linter.
- * @param ruleId - Rule that must identify the violation.
- * @param filePath - Existing project file that selects the appropriate config.
- * @returns Completion after the expected diagnostic has been found.
+ * Проверяет нарушение правил через действующую конфигурацию ESLint.
+ * @param source - Заведомо некорректный код TypeScript, передаваемый только линтеру.
+ * @param ruleId - Идентификатор правила, которое должно обнаружить нарушение.
+ * @param filePath - Путь существующего файла проекта для выбора конфигурации.
+ * @returns Промис, завершающийся после проверки ожидаемого сообщения об ошибке.
  */
 async function expectViolation(
   source: string,
@@ -42,8 +42,8 @@ async function expectViolation(
 }
 
 /**
- * Verifies that a written any cannot bypass strict compiler settings.
- * @returns Completion after the linter identifies the unsafe type.
+ * Проверяет, что явно указанный any отклоняется в дополнение к проверкам компилятора.
+ * @returns Промис, завершающийся после обнаружения запрещённого типа линтером.
  */
 async function rejectsAny(): Promise<void> {
   await expectViolation(
@@ -53,16 +53,16 @@ async function rejectsAny(): Promise<void> {
 }
 
 /**
- * Verifies that named classes have no framework exception.
- * @returns Completion after the declaration is rejected.
+ * Проверяет запрет объявлений классов без исключений для фреймворка.
+ * @returns Промис, завершающийся после проверки отклонённого объявления класса.
  */
 async function rejectsClassDeclarations(): Promise<void> {
   await expectViolation('export class Prohibited {}', 'no-restricted-syntax');
 }
 
 /**
- * Verifies that anonymous class expressions cannot bypass the policy.
- * @returns Completion after the expression is rejected.
+ * Проверяет, что выражение анонимного класса не позволяет обойти запрет классов.
+ * @returns Промис, завершающийся после проверки отклонённого выражения класса.
  */
 async function rejectsClassExpressions(): Promise<void> {
   await expectViolation(
@@ -72,8 +72,8 @@ async function rejectsClassExpressions(): Promise<void> {
 }
 
 /**
- * Verifies that declared functions need a documentation comment.
- * @returns Completion after the missing documentation is reported.
+ * Проверяет обязательность JSDoc для объявлений функций.
+ * @returns Промис, завершающийся после обнаружения отсутствующего комментария.
  */
 async function rejectsUndocumentedDeclarations(): Promise<void> {
   await expectViolation(
@@ -83,8 +83,8 @@ async function rejectsUndocumentedDeclarations(): Promise<void> {
 }
 
 /**
- * Verifies that arrow functions need a documentation comment.
- * @returns Completion after the missing documentation is reported.
+ * Проверяет обязательность JSDoc для стрелочных функций.
+ * @returns Промис, завершающийся после обнаружения отсутствующего комментария.
  */
 async function rejectsUndocumentedArrows(): Promise<void> {
   await expectViolation(
@@ -94,8 +94,8 @@ async function rejectsUndocumentedArrows(): Promise<void> {
 }
 
 /**
- * Verifies that function expressions need a documentation comment.
- * @returns Completion after the missing documentation is reported.
+ * Проверяет обязательность JSDoc для функциональных выражений.
+ * @returns Промис, завершающийся после обнаружения отсутствующего комментария.
  */
 async function rejectsUndocumentedExpressions(): Promise<void> {
   await expectViolation(
@@ -105,8 +105,8 @@ async function rejectsUndocumentedExpressions(): Promise<void> {
 }
 
 /**
- * Verifies that inline callbacks are covered even when they are not exported.
- * @returns Completion after the undocumented callback has been reported.
+ * Проверяет обязательность JSDoc для вложенных неэкспортируемых функций обратного вызова.
+ * @returns Промис, завершающийся после обнаружения функции без комментария.
  */
 async function rejectsUndocumentedCallbacks(): Promise<void> {
   await expectViolation(
@@ -116,8 +116,8 @@ async function rejectsUndocumentedCallbacks(): Promise<void> {
 }
 
 /**
- * Verifies that JavaScript tooling cannot introduce application classes.
- * @returns Completion after the script class has been rejected.
+ * Проверяет запрет классов в служебных скриптах JavaScript.
+ * @returns Промис, завершающийся после проверки отклонённого класса в скрипте.
  */
 async function rejectsScriptClasses(): Promise<void> {
   await expectViolation(
@@ -128,8 +128,8 @@ async function rejectsScriptClasses(): Promise<void> {
 }
 
 /**
- * Verifies that JavaScript tooling functions also require documentation.
- * @returns Completion after the undocumented script function has been reported.
+ * Проверяет обязательность JSDoc для функций в служебных скриптах JavaScript.
+ * @returns Промис, завершающийся после обнаружения функции скрипта без комментария.
  */
 async function rejectsUndocumentedScriptFunctions(): Promise<void> {
   await expectViolation(

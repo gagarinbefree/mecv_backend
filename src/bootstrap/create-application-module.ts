@@ -4,9 +4,9 @@ import type { DynamicModule, Provider } from '@nestjs/common';
 type ProviderExtras = Readonly<{ providers: readonly Provider[] }>;
 
 /**
- * Composes the application providers into a NestJS module.
- * @param providers - Explicit providers owned by this application.
- * @returns A dynamic module accepted by the Nest application factory.
+ * Собирает модуль NestJS из явно переданных провайдеров приложения.
+ * @param providers - Провайдеры, принадлежащие этому приложению.
+ * @returns Динамический модуль для создания контекста приложения NestJS.
  */
 export function createApplicationModule(
   providers: readonly Provider[],
@@ -21,10 +21,10 @@ export function createApplicationModule(
 }
 
 /**
- * Adds functional providers while preserving the builder's options provider.
- * @param definition - Dynamic module generated internally by NestJS.
- * @param extras - Explicit providers for this application instance.
- * @returns A module definition containing both framework and application providers.
+ * Добавляет провайдеры приложения, сохраняя провайдер настроек, созданный NestJS.
+ * @param definition - Определение динамического модуля, созданное NestJS.
+ * @param extras - Провайдеры для этого экземпляра приложения.
+ * @returns Определение модуля с провайдерами фреймворка и приложения.
  */
 function appendProviders(
   definition: DynamicModule,

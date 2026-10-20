@@ -8,7 +8,7 @@ type Reader = Readonly<{ read: () => string }>;
 describe('functional NestJS composition', defineModuleTests);
 
 /**
- * Registers the observable contracts for functional module composition.
+ * Регистрирует проверки функциональной композиции модулей.
  */
 function defineModuleTests(): void {
   it('resolves a factory provider with explicit dependencies', resolvesFactory);
@@ -16,14 +16,14 @@ function defineModuleTests(): void {
 }
 
 /**
- * Creates a reader that captures an explicitly supplied dependency.
- * @param prefix - Immutable value supplied through dependency injection.
- * @returns A reader with no prototype or application class.
+ * Создаёт объект чтения, замыкающий явно переданную зависимость.
+ * @param prefix - Неизменяемое значение, переданное через внедрение зависимостей.
+ * @returns Объект с функцией чтения без собственного класса.
  */
 function createReader(prefix: string): Reader {
   /**
-   * Reads the value supplied when the reader was created.
-   * @returns The captured dependency value.
+   * Читает значение, переданное при создании объекта чтения.
+   * @returns Значение зависимости, сохранённое в замыкании.
    */
   function read(): string {
     return prefix;
@@ -33,8 +33,8 @@ function createReader(prefix: string): Reader {
 }
 
 /**
- * Proves that Nest resolves a functional provider and its dependency token.
- * @returns Completion after the application context has been closed.
+ * Проверяет, что NestJS создаёт провайдер через фабрику и внедряет его зависимость.
+ * @returns Промис, завершающийся после проверки и закрытия контекста приложения.
  */
 async function resolvesFactory(): Promise<void> {
   const prefixToken = Symbol('prefix');
@@ -55,8 +55,8 @@ async function resolvesFactory(): Promise<void> {
 }
 
 /**
- * Proves that plain object providers participate in init and shutdown.
- * @returns Completion after both lifecycle contracts have been asserted.
+ * Проверяет вызов обработчиков жизненного цикла у провайдера в виде обычного объекта.
+ * @returns Промис, завершающийся после проверки инициализации и завершения работы.
  */
 async function executesLifecycle(): Promise<void> {
   const providerToken = Symbol('lifecycle');
