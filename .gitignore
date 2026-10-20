@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+.vitest/
+.env
+.env.*
+!.env.example
+!.env.test.example
+*.tsbuildinfo
+*.log
+.npm-cache/
+src/generated/
