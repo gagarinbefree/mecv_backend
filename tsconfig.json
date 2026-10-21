@@ -13,6 +13,7 @@
     "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
+    "rewriteRelativeImportExtensions": true,
     "skipLibCheck": false,
     "types": [
       "node"
@@ -23,6 +24,8 @@
     "src/**/*.ts",
     "test/**/*.ts",
     "vitest.config.ts",
-    "codegen.ts"
+    "codegen.ts",
+    "prisma.config.ts",
+    "scripts/**/*.ts"
   ]
 }

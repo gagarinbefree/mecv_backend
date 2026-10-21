@@ -1,0 +1,77 @@
+generator client {
+  provider               = "prisma-client"
+  output                 = "../src/generated/prisma"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  description String
+  links       ProfileLink[]
+  skills      Skill[]
+  experience  Experience[]
+  projects    Project[]
+}
+
+model ProfileLink {
+  id        String  @id @default(cuid())
+  profileId String
+  key       String
+  label     String
+  url       String
+  sortOrder Int
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, key])
+  @@index([profileId, sortOrder, id])
+}
+
+model Skill {
+  id        String  @id @default(cuid())
+  profileId String
+  key       String
+  name      String
+  sortOrder Int
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, key])
+  @@index([profileId, sortOrder, id])
+}
+
+model Experience {
+  id           String    @id @default(cuid())
+  profileId    String
+  key          String
+  company      String
+  position     String
+  startDate    DateTime  @db.Date
+  endDate      DateTime? @db.Date
+  achievements String[]
+  sortOrder    Int
+  profile      Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, key])
+  @@index([profileId, sortOrder, id])
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  profileId   String
+  key         String
+  name        String
+  description String
+  url         String
+  sortOrder   Int
+  profile     Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, key])
+  @@index([profileId, sortOrder, id])
+}
