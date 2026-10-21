@@ -8,10 +8,16 @@
     "node": ">=24.15.0 <25"
   },
   "scripts": {
+    "codegen": "graphql-codegen --config codegen.ts",
+    "prelint": "npm run codegen",
     "lint": "eslint . --max-warnings=0",
+    "pretypecheck": "npm run codegen",
     "typecheck": "tsc --noEmit",
+    "pretest": "npm run codegen",
     "test": "vitest run",
+    "pretest:watch": "npm run codegen",
     "test:watch": "vitest",
+    "prebuild": "npm run codegen",
     "build": "tsc --project tsconfig.build.json",
     "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
@@ -24,6 +30,9 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@graphql-codegen/cli": "7.4.6",
+    "@graphql-codegen/typescript": "6.1.2",
+    "@graphql-codegen/typescript-resolvers": "6.1.1",
     "@types/node": "24.19.2",
     "eslint": "10.13.0",
     "eslint-plugin-jsdoc": "65.4.0",
