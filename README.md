@@ -51,6 +51,8 @@ npm run check
 
 Dev-зависимости ts-morph и @apollo/gateway нужны для проверки деклараций пакетов NestJS при skipLibCheck: false. Они не включают федерацию или генерацию SDL из классов в приложении.
 
+В .npmrc включена обычная проверка peerDependencies: legacy-peer-deps=false. Глобальная настройка npm не должна позволять создавать lockfile с несовместимыми peer-зависимостями.
+
 ## Типы GraphQL
 
 Настройки находятся в [codegen.ts](codegen.ts). Источник типов — SDL; результат записывается в src/generated/graphql.ts, исключён из Git и не редактируется вручную. Для отдельного обновления выполни npm run codegen.
