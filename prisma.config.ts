@@ -13,7 +13,10 @@ const shadowDatabaseUrl = process.env['SHADOW_DATABASE_URL'];
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
-  migrations: { path: 'prisma/migrations' },
+  migrations: {
+    path: 'prisma/migrations',
+    seed: 'node dist/database/run-seed.js',
+  },
   ...(url === undefined ? {} : {
     datasource: {
       url,

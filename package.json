@@ -13,6 +13,8 @@
     "codegen:prisma": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
+    "predb:seed": "npm run build",
+    "db:seed": "prisma db seed",
     "prelint": "npm run codegen",
     "lint": "eslint . --max-warnings=0",
     "pretypecheck": "npm run codegen",

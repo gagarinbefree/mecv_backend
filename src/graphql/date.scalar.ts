@@ -1,5 +1,6 @@
 import { GraphQLError, GraphQLScalarType, Kind } from 'graphql';
 import type { ValueNode } from 'graphql';
+import { isCalendarDate } from '../profile/calendar-date.js';
 
 export const dateScalar = new GraphQLScalarType<string, string>({
   name: 'Date',
@@ -20,14 +21,7 @@ function validateDate(value: unknown): string {
     throw new GraphQLError('Date должен быть строкой в формате YYYY-MM-DD.');
   }
 
-  const year = Number(value.slice(0, 4));
-  const month = Number(value.slice(5, 7));
-  const day = Number(value.slice(8, 10));
-  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  const maximumDay = daysInMonth[month - 1];
-
-  if (year === 0 || maximumDay === undefined || day < 1 || day > maximumDay) {
+  if (!isCalendarDate(value)) {
     throw new GraphQLError('Date должен содержать существующую дату с годом от 0001 до 9999.');
   }
 
