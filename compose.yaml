@@ -1,0 +1,45 @@
+services:
+  database:
+    image: postgres:17.5-bookworm
+    environment:
+      POSTGRES_DB: mecv
+      POSTGRES_USER: mecv
+      POSTGRES_PASSWORD: ${MECV_DATABASE_PASSWORD:?Set MECV_DATABASE_PASSWORD in .env.docker}
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build: .
+    init: true
+    environment:
+      DATABASE_URL: postgresql://mecv:${MECV_DATABASE_PASSWORD:?Set MECV_DATABASE_PASSWORD in .env.docker}@database:5432/mecv?schema=public
+      HOST: 0.0.0.0
+      PORT: '3000'
+    ports:
+      - '${MECV_BIND_ADDRESS:-127.0.0.1}:${MECV_HTTP_PORT:-3100}:3000'
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - --input-type=module
+        - -e
+        - "const response = await fetch('http://127.0.0.1:3000/health', { signal: AbortSignal.timeout(3000) }); if (!response.ok) process.exitCode = 1;"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 90s
+    stop_grace_period: 20s
+    restart: unless-stopped
+
+volumes:
+  database_data:

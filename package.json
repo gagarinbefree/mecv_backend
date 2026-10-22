@@ -21,6 +21,7 @@
     "typecheck": "tsc --noEmit",
     "pretest": "npm run codegen",
     "test": "node scripts/run-tests.ts",
+    "test:docker": "node scripts/test-docker.ts",
     "pretest:watch": "npm run codegen",
     "test:watch": "vitest",
     "prebuild": "npm run codegen",

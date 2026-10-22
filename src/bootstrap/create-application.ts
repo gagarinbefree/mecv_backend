@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import type { Server } from 'node:http';
+import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 import type { DynamicModule, INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ApolloDriver } from '@nestjs/apollo';
@@ -89,8 +89,20 @@ async function createHttpApplication(
     useFactory: createGraphQLOptions,
   });
 
-  return NestFactory.create<INestApplication<Server>>(
+  const application = await NestFactory.create<INestApplication<Server>>(
     createApplicationModule([], [graphqlModule]),
     { ...options, abortOnError: false },
   );
+  application.getHttpAdapter().get('/health', respondHealth);
+  return application;
+}
+
+/**
+ * Подтверждает доступность HTTP-процесса без обращения к данным профиля.
+ * @param _request - Входящий запрос проверки хостинга.
+ * @param response - Ответ Node.js без кэширования и сведений о конфигурации.
+ */
+function respondHealth(_request: IncomingMessage, response: ServerResponse): void {
+  response.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+  response.end(JSON.stringify({ status: 'ok' }));
 }

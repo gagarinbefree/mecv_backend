@@ -18,10 +18,35 @@ function defineHttpTests(): void {
   it('returns the profile and all nested data over HTTP', returnsProfile);
   it('returns null when the profile is absent', returnsAbsentProfile);
   it('serves embedded Apollo Sandbox', servesSandbox);
+  it('serves a health check without reading profile data', servesHealth);
   it('supports introspection for Sandbox', supportsIntrospection);
   it('rejects unknown fields', rejectsUnknownFields);
   it('rejects an impossible date returned by the reader', rejectsInvalidOutputDate);
   it('reports reader errors without exposing a stack trace', reportsReaderError);
+}
+
+/**
+ * Проверяет доступность HTTP без GraphQL, заголовков браузера и чтения профиля.
+ * @returns Промис проверки служебного маршрута и закрытия сервера.
+ */
+async function servesHealth(): Promise<void> {
+  const reader = vi.fn<ReadProfile>().mockRejectedValue(new Error('Profile must not be read'));
+  await withApplication(reader, verifyHealth);
+  expect(reader).not.toHaveBeenCalled();
+}
+
+/**
+ * Выполняет простой запрос, которым хостинг проверяет запущенный процесс.
+ * @param endpoint - Адрес GraphQL тестового приложения.
+ * @returns Промис проверки статуса, формата и отсутствия кэширования ответа.
+ */
+async function verifyHealth(endpoint: string): Promise<void> {
+  const response = await fetch(new URL('/health', endpoint), { signal: AbortSignal.timeout(5_000) });
+  const body: unknown = await response.json();
+  expect(response.status).toBe(200);
+  expect(response.headers.get('content-type')).toContain('application/json');
+  expect(response.headers.get('cache-control')).toBe('no-store');
+  expect(body).toEqual({ status: 'ok' });
 }
 
 /**

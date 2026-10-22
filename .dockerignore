@@ -1,0 +1,16 @@
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!.npmrc
+!tsconfig.json
+!tsconfig.build.json
+!codegen.ts
+!prisma.config.ts
+!prisma/
+!prisma/**
+!src/
+!src/**
+!scripts/
+!scripts/copy-assets.mjs
+src/generated/

@@ -29,6 +29,11 @@ async function runTests(): Promise<void> {
     });
     if (result.error) throw result.error;
     process.exitCode = result.status ?? 1;
+    if (process.exitCode === 0 && process.env['GITHUB_ACTIONS'] === 'true' && process.platform === 'linux') {
+      const docker = spawnSync(process.execPath, ['scripts/test-docker.ts'], { cwd: root, stdio: 'inherit' });
+      if (docker.error) throw docker.error;
+      process.exitCode = docker.status ?? 1;
+    }
   } finally {
     await postgres?.close();
   }

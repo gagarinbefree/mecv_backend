@@ -61,6 +61,10 @@ function defineMainTests(): void {
     });
     try {
       const endpoint = await waitForApplication(child);
+      const health = await fetch(new URL('/health', endpoint), { signal: AbortSignal.timeout(5_000) });
+      const healthBody: unknown = await health.json();
+      expect(health.status).toBe(200);
+      expect(healthBody).toEqual({ status: 'ok' });
       const response = await fetch(endpoint, {
         method: 'POST', headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query: '{ profile { name skills { name } } }' }), signal: AbortSignal.timeout(5_000),
