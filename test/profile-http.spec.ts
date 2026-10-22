@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createApplication } from '../src/bootstrap/create-application.js';
-import { demoProfile } from '../src/profile/demo-profile.js';
-import type { ReadProfile } from '../src/profile/profile-reader.js';
+import { demoProfile } from './helpers/demo-profile.js';
+import { createTestProfileRepository, type ReadTestProfile as ReadProfile } from './helpers/test-profile-repository.js';
 
 const fullQuery = `query {
   profile {
@@ -34,7 +34,7 @@ async function withApplication(
   readProfile: ReadProfile,
   verify: (endpoint: string) => Promise<void>,
 ): Promise<void> {
-  const application = await createApplication(readProfile, { logger: false });
+  const application = await createApplication(createTestProfileRepository(readProfile), { logger: false });
   try {
     await application.listen(0, '127.0.0.1');
     await verify(`${await application.getUrl()}/graphql`);

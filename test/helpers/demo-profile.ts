@@ -1,5 +1,5 @@
-import type { Experience, ProfileLink, Profile, Project, Skill } from '../generated/graphql.js';
-import { demoProfileSeedData, type ProfileSeedData } from './profile-seed-data.js';
+import type { Experience, ProfileLink, Profile, Project, Skill } from '../../src/generated/graphql.js';
+import { demoProfileSeedData, type ProfileSeedData } from '../../src/profile/profile-seed-data.js';
 
 export const demoProfile: Profile = {
   name: demoProfileSeedData.name,
@@ -9,14 +9,6 @@ export const demoProfile: Profile = {
   experience: demoProfileSeedData.experience.map(toExperience),
   projects: demoProfileSeedData.projects.map(toProject),
 };
-
-/**
- * Читает демонстрационный профиль для запуска API до подключения базы данных.
- * @returns Промис с явно обозначенными учебными данными.
- */
-export function readDemoProfile(): Promise<Profile | null> {
-  return Promise.resolve(demoProfile);
-}
 
 /**
  * Выбирает публичные поля ссылки без технического ключа seed.

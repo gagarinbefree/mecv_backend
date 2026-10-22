@@ -1,6 +1,7 @@
 import type { GraphQLResolveInfo } from 'graphql';
 import { expectTypeOf, it } from 'vitest';
 import type { GraphQLContext } from '../src/graphql/graphql-context.js';
+import type { ProfileRecord } from '../src/profile/profile.repository.js';
 import type {
   Experience,
   Profile,
@@ -51,7 +52,7 @@ it('types all query resolver parameters and its result',
     expectTypeOf<Parameters[1]>().toEqualTypeOf<Record<PropertyKey, never>>();
     expectTypeOf<Parameters[2]>().toEqualTypeOf<GraphQLContext>();
     expectTypeOf<Parameters[3]>().toEqualTypeOf<GraphQLResolveInfo>();
-    expectTypeOf<FieldResult<QueryResolvers['profile']>>().toEqualTypeOf<Profile | null>();
+    expectTypeOf<FieldResult<QueryResolvers['profile']>>().toEqualTypeOf<ProfileRecord | null>();
   },
 );
 
@@ -59,7 +60,7 @@ it('types nested resolver parents and their results',
   /** Проверяет тип родительского профиля, контекст и результат резолвера навыков. */
   (): void => {
     type Parameters = FieldParameters<ProfileResolvers['skills']>;
-    expectTypeOf<Parameters[0]>().toEqualTypeOf<Profile>();
+    expectTypeOf<Parameters[0]>().toEqualTypeOf<ProfileRecord>();
     expectTypeOf<Parameters[2]>().toEqualTypeOf<GraphQLContext>();
     expectTypeOf<FieldResult<ProfileResolvers['skills']>>()
       .toEqualTypeOf<readonly (Skill | Promise<Skill>)[]>();

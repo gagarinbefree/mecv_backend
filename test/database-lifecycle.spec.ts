@@ -15,6 +15,7 @@ function defineLifecycleTests(): void {
   it('reuses one client and releases its PostgreSQL sessions on Nest shutdown', releasesPool);
   it('rejects startup when PostgreSQL is unavailable', rejectsUnavailableDatabase);
   it('keeps clients isolated between application instances', isolatesClients);
+  it('reports actual SQL queries to an explicit observer', observesQueries);
 
   /** Создаёт отдельную схему с применённой историей миграций. */
   async function prepareDatabase(): Promise<void> {
@@ -76,6 +77,29 @@ function defineLifecycleTests(): void {
     } finally {
       await first.client.$disconnect();
       await second.client.$disconnect();
+    }
+  }
+
+  /** Проверяет наблюдение настоящих SELECT без вывода параметров подключения и значений. */
+  async function observesQueries(): Promise<void> {
+    const queries: string[] = [];
+    const database = createDatabase(fixture.connectionString, recordQuery);
+    try {
+      await database.onModuleInit();
+      queries.length = 0;
+      await database.client.profile.count();
+      expect(queries).toHaveLength(1);
+      expect(queries[0]).toContain('"Profile"');
+    } finally {
+      await database.onModuleDestroy();
+    }
+
+    /**
+     * Сохраняет только текст SQL для проверки числа обращений к серверу.
+     * @param event - Событие выполненного SQL-запроса.
+     */
+    function recordQuery(event: Readonly<{ query: string }>): void {
+      queries.push(event.query);
     }
   }
 }

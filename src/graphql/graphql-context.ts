@@ -1,13 +1,14 @@
-/**
- * Неизменяемый контекст одного GraphQL-запроса без зависимостей на текущем этапе.
- * Неизвестные значения требуют проверки перед использованием; тип будет уточнён при подключении загрузчиков.
- */
-export type GraphQLContext = Readonly<Record<string, unknown>>;
+import { createProfileLoaders, type ProfileLoaders } from '../profile/profile.loaders.js';
+import { createProfileService, type ProfileService } from '../profile/profile.service.js';
+import type { ProfileRepository } from '../profile/profile.repository.js';
+
+export type GraphQLContext = Readonly<{ profile: ProfileService; loaders: ProfileLoaders }>;
 
 /**
- * Создаёт отдельный контекст каждого запроса для последующего подключения загрузчиков.
- * @returns Новый объект контекста без общего изменяемого состояния между запросами.
+ * Создаёт сервис и загрузчики заново для каждой операции GraphQL.
+ * @param repository - Общий предметный репозиторий приложения.
+ * @returns Типизированный контекст без общего кэша между запросами.
  */
-export function createGraphQLContext(): GraphQLContext {
-  return {};
+export function createGraphQLContext(repository: ProfileRepository): GraphQLContext {
+  return { profile: createProfileService(repository), loaders: createProfileLoaders(repository) };
 }

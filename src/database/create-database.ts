@@ -11,16 +11,21 @@ export type Database = Readonly<{
 /**
  * Создаёт ресурс Prisma с собственным пулом и обработчиками жизненного цикла NestJS.
  * @param connectionString - Проверяемый URL PostgreSQL.
+ * @param onQuery - Необязательный наблюдатель SQL для измерения обращений к БД.
  * @returns Клиент и обработчики подготовки и освобождения ресурса.
  */
-export function createDatabase(connectionString: string): Database {
+export function createDatabase(
+  connectionString: string,
+  onQuery?: (event: Readonly<{ query: string }>) => void,
+): Database {
   const config = readDatabaseConfig(connectionString);
   const adapter = new PrismaPg({
     connectionString: config.connectionString,
     max: 5,
     connectionTimeoutMillis: 5_000,
   }, { schema: config.schema });
-  const client = new PrismaClient({ adapter });
+  const client = new PrismaClient({ adapter, log: [{ emit: 'event', level: 'query' }] });
+  if (onQuery) client.$on('query', onQuery);
 
   /** Инициализирует клиент перед использованием приложения. */
   async function onModuleInit(): Promise<void> {

@@ -10,6 +10,7 @@ const pluginConfig = {
     Date: { input: 'string', output: 'string' },
   },
   contextType: '../graphql/graphql-context.js#GraphQLContext',
+  mappers: { Profile: '../profile/profile.repository.js#ProfileRecord' },
 };
 
 const config = {
