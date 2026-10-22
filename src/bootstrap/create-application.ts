@@ -7,7 +7,8 @@ import type { ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { createGraphQLOptions } from '../graphql/create-graphql-options.js';
 import type { ProfileRepository } from '../profile/profile.repository.js';
-import { createDatabase, type Database } from '../database/create-database.js';
+import type { Database } from '../database/create-database.js';
+import { createPreparedDatabase } from '../database/create-prepared-database.js';
 import { createProfileRepository } from '../database/create-profile-repository.js';
 import { createApplicationModule } from './create-application-module.js';
 
@@ -39,7 +40,7 @@ export async function createDatabaseApplication(
    * @returns Клиент и обработчики открытия и закрытия пула.
    */
   function createOwnedDatabase(): Database {
-    return createDatabase(connectionString, onQuery);
+    return createPreparedDatabase(connectionString, onQuery);
   }
 
   /**

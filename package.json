@@ -42,6 +42,7 @@
     "dataloader": "2.2.3",
     "graphql": "16.14.2",
     "pg": "8.23.1",
+    "prisma": "7.10.1",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
   },
@@ -55,7 +56,6 @@
     "@types/pg": "8.23.1",
     "eslint": "10.13.0",
     "eslint-plugin-jsdoc": "65.4.0",
-    "prisma": "7.10.1",
     "ts-morph": "28.0.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0",
